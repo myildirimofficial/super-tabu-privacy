@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Taboo - Kelime Oyunu & Eğlence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #080C14;
+      --card-bg: rgba(23, 31, 51, 0.65);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --primary: #FF2E93;
+      --primary-glow: rgba(255, 46, 147, 0.4);
+      --secondary: #00F0FF;
+      --secondary-glow: rgba(0, 240, 255, 0.3);
+      --accent: #FFB800;
+      --text-main: #F1F5F9;
+      --text-sub: #94A3B8;
+      --glass-blur: blur(16px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    .bg-blur-circle {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(140px);
+      z-index: -1;
+      pointer-events: none;
+    }
+    .blur-1 { top: -100px; left: -100px; width: 500px; height: 500px; background: rgba(255, 46, 147, 0.25); }
+    .blur-2 { top: 30%; right: -150px; width: 600px; height: 600px; background: rgba(0, 240, 255, 0.2); }
+    .blur-3 { bottom: 10%; left: 20%; width: 500px; height: 500px; background: rgba(255, 184, 0, 0.15); }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 8%;
+      backdrop-filter: var(--glass-blur);
+      background: rgba(8, 12, 20, 0.7);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px var(--primary-glow);
+    }
+
+    .logo-text {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #FFF 30%, var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 30px;
+      padding: 4px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-sub);
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .lang-btn.active {
+      background: linear-gradient(135deg, var(--primary), #D9006C);
+      color: #FFF;
+      box-shadow: 0 2px 10px var(--primary-glow);
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 80px 8% 60px 8%;
+      gap: 60px;
+      min-height: calc(100vh - 80px);
+    }
+
+    .hero-content {
+      flex: 1;
+      max-width: 600px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 20px;
+      color: var(--secondary);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -1px;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 1.15rem;
+      color: var(--text-sub);
+      margin-bottom: 36px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-google-play {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #000;
+      color: #FFF;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 12px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-google-play:hover {
+      transform: translateY(-3px);
+      border-color: var(--secondary);
+      box-shadow: 0 12px 35px var(--secondary-glow);
+    }
+
+    .btn-google-play svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .play-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.2;
+    }
+
+    .play-text span:first-child {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: #94A3B8;
+    }
+
+    .play-text span:last-child {
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .hero-visual {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
+    .phone-mockup {
+      width: 310px;
+      height: 620px;
+      background: #0A0F1D;
+      border-radius: 44px;
+      border: 8px solid #1E293B;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px var(--primary-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .features {
+      padding: 100px 8%;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      color: var(--text-sub);
+      font-size: 1.1rem;
+      margin-bottom: 60px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: var(--glass-blur);
+      padding: 32px 24px;
+      border-radius: 24px;
+      text-align: left;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255, 46, 147, 0.4);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: rgba(255, 46, 147, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 46, 147, 0.2);
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      color: var(--text-sub);
+      font-size: 0.95rem;
+    }
+
+    .gallery-section {
+      padding: 80px 8%;
+      background: rgba(15, 23, 42, 0.4);
+      border-top: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .gallery-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-sub);
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--primary);
+      color: #FFF;
+      border-color: var(--primary);
+      box-shadow: 0 4px 15px var(--primary-glow);
+    }
+
+    .gallery-viewer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .gallery-frame {
+      width: 300px;
+      height: 600px;
+      border-radius: 36px;
+      border: 6px solid #1E293B;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      background: #000;
+    }
+
+    .gallery-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .how-to-play {
+      padding: 100px 8%;
+    }
+
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 32px;
+      border-radius: 24px;
+      position: relative;
+    }
+
+    .step-num {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.08);
+    }
+
+    .step-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      color: var(--secondary);
+    }
+
+    .step-card p {
+      color: var(--text-sub);
+    }
+
+    .faq-section {
+      padding: 80px 8%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      padding: 20px 24px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-answer {
+      padding: 0 24px 20px 24px;
+      color: var(--text-sub);
+      display: none;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(180deg);
+    }
+
+    .faq-icon {
+      transition: transform 0.3s ease;
+    }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 40px 8%;
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 40px;
+      }
+
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .cta-buttons {
+        justify-content: center;
+      }
+
+      .badge {
+        margin: 0 auto 20px auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-blur-circle blur-1"></div>
+  <div class="bg-blur-circle blur-2"></div>
+  <div class="bg-blur-circle blur-3"></div>
+
+  <nav>
+    <a href="#" class="logo-container">
+      <img src="./images/logo.png" alt="Super Taboo" class="logo-icon" id="navLogo">
+      <span class="logo-text">SUPER TABOO</span>
+    </a>
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="btn-tr" onclick="setLanguage('tr')">TR</button>
+      <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content">
+      <div class="badge">
+        <span>⚡</span> <span id="heroBadge">En Eğlenceli Parti Oyunu</span>
+      </div>
+      <h1 class="hero-title" id="heroTitle">Sınırları Zorla, <span>Yasaklı Kelimelere</span> Takılma!</h1>
+      <p class="hero-desc" id="heroDesc">
+        Arkadaş grubunla veya ailenle unutulmaz eğlenceli anlar yaşa. Binlerce güncel kelime kartı, özelleştirilebilir takım ayarları ve tempolu ses efektleriyle Super Taboo cebinizde!
+      </p>
+      <div class="cta-buttons">
+        <a href="#" class="btn-google-play">
+          <svg viewBox="0 0 512 512" fill="currentColor">
+            <path d="M99.617 8.057a50.091 50.091 0 00-38.867 18.24L260.1 256 60.75 485.703a50.091 50.091 0 0038.867 18.24c13.82 0 27.288-5.614 36.852-15.178l235.6-136.023-111.969-96.742L99.617 8.057z" fill="#00E676"/>
+            <path d="M410.67 218.771L333.3 174.12 260.1 256l73.2 81.88 77.37-44.651c22.253-12.848 35.882-36.452 35.882-62.229s-13.629-49.381-35.882-62.229z" fill="#FFD600"/>
+            <path d="M60.75 26.297L260.1 256 99.617 8.057C85.797 8.057 72.329 13.671 62.765 23.235A49.88 49.88 0 0060.75 26.297z" fill="#00B0FF"/>
+            <path d="M60.75 485.703a49.88 49.88 0 002.015 3.062c9.564 9.564 23.032 15.178 36.852 15.178l160.483-247.943L60.75 485.703z" fill="#FF3D00"/>
+          </svg>
+          <div class="play-text">
+            <span id="ctaDownload">HEMEN İNDİR</span>
+            <span>Google Play</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="phone-mockup">
+        <img src="./images/tr-game.png" alt="Super Taboo App" class="phone-screen" id="heroPhoneImg">
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <h2 class="section-title" id="featTitle">Öne Çıkan Özellikler</h2>
+    <p class="section-subtitle" id="featSub">Harika bir tabu deneyimi için ihtiyacın olan her şey tek bir uygulamada.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3 id="f1Title">Takım Yönetimi</h3>
+        <p id="f1Desc">Kendi takımlarınızı oluşturun, renklendirin ve takım isimlerini dilediğiniz gibi özelleştirin.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3 id="f2Title">Çoklu Dil Desteği</h3>
+        <p id="f2Desc">Hem Türkçe hem de İngilizce kelime kartları ile pratik yapın veya yabancı arkadaşlarınızla oynayın.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💓</div>
+        <h3 id="f3Title">Kalp Atışı & Titreşim</h3>
+        <p id="f3Desc">Süre azaldıkça hızlanan kalp atışı ses efektleri ve dokunsal geri bildirimlerle heyecanı zirvede yaşayın.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3 id="f4Title">Geçmiş & Skor Tablosu</h3>
+        <p id="f4Desc">Oynadığınız maçların detaylı istatistiklerini görün ve skorbordu anlık takip edin.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery-section">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <h2 class="section-title" id="galleryTitle">Uygulama İçi Ekran Görüntüleri</h2>
+      <p class="section-subtitle" id="gallerySub">Sade, modern ve göz yormayan arayüz tasarımı.</p>
+    </div>
+
+    <div class="gallery-tabs">
+      <button class="tab-btn active" onclick="changeTab('game', this)" id="tabGame">Oyun Ekranı</button>
+      <button class="tab-btn" onclick="changeTab('teams', this)" id="tabTeams">Takımlar</button>
+      <button class="tab-btn" onclick="changeTab('mode', this)" id="tabMode">Oyun Modları</button>
+      <button class="tab-btn" onclick="changeTab('settings', this)" id="tabSettings">Ayarlar</button>
+      <button class="tab-btn" onclick="changeTab('history', this)" id="tabHistory">Geçmiş</button>
+    </div>
+
+    <div class="gallery-viewer">
+      <div class="gallery-frame">
+        <img src="./images/tr-game.png" id="galleryImage" class="gallery-img" alt="Screen Preview">
+      </div>
+    </div>
+  </section>
+
+  <section class="how-to-play">
+    <div style="text-align: center;">
+      <h2 class="section-title" id="howTitle">Nasıl Oynanır?</h2>
+      <p class="section-subtitle" id="howSub">3 basit adımda eğlenceye katılın.</p>
+    </div>
+
+    <div class="steps-container">
+      <div class="step-card">
+        <span class="step-num">01</span>
+        <h3 id="s1Title">Takımları Kur</h3>
+        <p id="s1Desc">Oyuncuları ikiye veya daha fazla takıma ayırın. Takım adlarınızı belirleyin.</p>
+      </div>
+
+      <div class="step-card">
+        <span class="step-num">02</span>
+        <h3 id="s2Title">Kelimeyi Anlat</h3>
+        <p id="s2Desc">Kartın en üstündeki hedef kelimeyi, altındaki yasaklı kelimeleri kullanmadan takım arkadaşına anlat.</p>
+      </div>
+
+      <div class="step-card">
+        <span class="step-num">03</span>
+        <h3 id="s3Title">Puanları Topla</h3>
+        <p id="s3Desc">Doğru tahminlerle puan kazanın. Süre bitmeden en yüksek skora ulaşan takım kazanır!</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <div style="text-align: center;">
+      <h2 class="section-title" id="faqTitle">Sıkça Sorulan Sorular</h2>
+      <p class="section-subtitle" id="faqSub">Merak ettiğiniz tüm detaylar burada.</p>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-question">
+        <span id="q1">Oyun ücretsiz mi?</span>
+        <span class="faq-icon">▼</span>
+      </div>
+      <div class="faq-answer" id="a1">
+        Evet, Super Taboo tamamen ücretsiz olarak indirilebilir ve oynanabilir.
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-question">
+        <span id="q2">İnternet bağlantısı gerekiyor mu?</span>
+        <span class="faq-icon">▼</span>
+      </div>
+      <div class="faq-answer" id="a2">
+        Hayır, Super Taboo'yu internetsiz olarak dilediğiniz her yerde keyifle oynayabilirsiniz.
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-question">
+        <span id="q3">Tur sürelerini değiştirebilir miyim?</span>
+        <span class="faq-icon">▼</span>
+      </div>
+      <div class="faq-answer" id="a3">
+        Evet, Ayarlar menüsünden tur sürelerini, yasaklı kelime sayılarını ve zorluk seviyelerini kişiselleştirebilirsiniz.
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Super Taboo. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // GitHub Pages için yerel dosya yolları
+    const images = {
+      tr: {
+        game: "./images/tr-game.png",
+        teams: "./images/tr-teams.png",
+        mode: "./images/tr-mode.png",
+        settings: "./images/tr-settings.png",
+        history: "./images/tr-history.png"
+      },
+      en: {
+        game: "./images/en-game.png",
+        teams: "./images/en-teams.png",
+        mode: "./images/en-mode.png",
+        settings: "./images/en-settings.png",
+        history: "./images/en-history.png"
+      }
+    };
+
+    const translations = {
+      tr: {
+        heroBadge: "En Eğlenceli Parti Oyunu",
+        heroTitle: 'Sınırları Zorla, <span>Yasaklı Kelimelere</span> Takılma!',
+        heroDesc: 'Arkadaş grubunla veya ailenle unutulmaz eğlenceli anlar yaşa. Binlerce güncel kelime kartı, özelleştirilebilir takım ayarları ve tempolu ses efektleriyle Super Taboo cebinizde!',
+        ctaDownload: "HEMEN İNDİR",
+        featTitle: "Öne Çıkan Özellikler",
+        featSub: "Harika bir tabu deneyimi için ihtiyacın olan her şey tek bir uygulamada.",
+        f1Title: "Takım Yönetimi",
+        f1Desc: "Kendi takımlarınızı oluşturun, renklendirin ve takım isimlerini dilediğiniz gibi özelleştirin.",
+        f2Title: "Çoklu Dil Desteği",
+        f2Desc: "Hem Türkçe hem de İngilizce kelime kartları ile pratik yapın veya yabancı arkadaşlarınızla oynayın.",
+        f3Title: "Kalp Atışı & Titreşim",
+        f3Desc: "Süre azaldıkça hızlanan kalp atışı ses efektleri ve dokunsal geri bildirimlerle heyecanı zirvede yaşayın.",
+        f4Title: "Geçmiş & Skor Tablosu",
+        f4Desc: "Oynadığınız maçların detaylı istatistiklerini görün ve skorbordu anlık takip edin.",
+        galleryTitle: "Uygulama İçi Ekran Görüntüleri",
+        gallerySub: "Sade, modern ve göz yormayan arayüz tasarımı.",
+        tabGame: "Oyun Ekranı",
+        tabTeams: "Takımlar",
+        tabMode: "Oyun Modları",
+        tabSettings: "Ayarlar",
+        tabHistory: "Geçmiş",
+        howTitle: "Nasıl Oynanır?",
+        howSub: "3 basit adımda eğlenceye katılın.",
+        s1Title: "Takımları Kur",
+        s1Desc: "Oyuncuları ikiye veya daha fazla takıma ayırın. Takım adlarınızı belirleyin.",
+        s2Title: "Kelimeyi Anlat",
+        s2Desc: "Kartın en üstündeki hedef kelimeyi, altındaki yasaklı kelimeleri kullanmadan takım arkadaşına anlat.",
+        s3Title: "Puanları Topla",
+        s3Desc: "Doğru tahminlerle puan kazanın. Süre bitmeden en yüksek skora ulaşan takım kazanır!",
+        faqTitle: "Sıkça Sorulan Sorular",
+        faqSub: "Merak ettiğiniz tüm detaylar burada.",
+        q1: "Oyun ücretsiz mi?",
+        a1: "Evet, Super Taboo tamamen ücretsiz olarak indirilebilir ve oynanabilir.",
+        q2: "İnternet bağlantısı gerekiyor mu?",
+        a2: "Hayır, Super Taboo'yu internetsiz olarak dilediğiniz her yerde keyifle oynayabilirsiniz.",
+        q3: "Tur sürelerini değiştirebilir miyim?",
+        a3: "Evet, Ayarlar menüsünden tur sürelerini, yasaklı kelime sayılarını ve zorluk seviyelerini kişiselleştirebilirsiniz."
+      },
+      en: {
+        heroBadge: "The Ultimate Party Game",
+        heroTitle: 'Push the Limits, Avoid <span>Taboo Words</span>!',
+        heroDesc: 'Enjoy unforgettable moments with your friends and family. Thousands of updated word cards, customizable teams, and thrilling sound effects—Super Taboo is right in your pocket!',
+        ctaDownload: "GET IT ON",
+        featTitle: "Key Features",
+        featSub: "Everything you need for an amazing Taboo experience in one app.",
+        f1Title: "Team Management",
+        f1Desc: "Create custom teams, pick colors, and personalize team names as you like.",
+        f2Title: "Multi-Language Support",
+        f2Desc: "Practice or play with friends in English and Turkish word decks.",
+        f3Title: "Heartbeat & Haptics",
+        f3Desc: "Feel the tension with accelerating heartbeat sound effects and haptic vibration feedback.",
+        f4Title: "History & Leaderboard",
+        f4Desc: "Review detailed match statistics and keep track of scores effortlessly.",
+        galleryTitle: "In-App Screenshots",
+        gallerySub: "Clean, modern, and eye-friendly user interface.",
+        tabGame: "Game Screen",
+        tabTeams: "Teams",
+        tabMode: "Game Modes",
+        tabSettings: "Settings",
+        tabHistory: "History",
+        howTitle: "How to Play?",
+        howSub: "Join the fun in 3 simple steps.",
+        s1Title: "Set Up Teams",
+        s1Desc: "Divide players into two or more teams and pick custom names.",
+        s2Title: "Describe the Word",
+        s2Desc: "Describe the top word to your teammates without saying any taboo words below.",
+        s3Title: "Score Points",
+        s3Desc: "Earn points with correct guesses. The team with highest score wins!",
+        faqTitle: "Frequently Asked Questions",
+        faqSub: "Find answers to all your questions here.",
+        q1: "Is the app free?",
+        a1: "Yes, Super Taboo is completely free to download and play.",
+        q2: "Does it require internet?",
+        a2: "No, you can play Super Taboo offline anywhere without an internet connection.",
+        q3: "Can I customize round duration?",
+        a3: "Yes, you can customize round lengths, taboo word counts, and difficulty levels in Settings."
+      }
+    };
+
+    let currentLang = 'tr';
+    let currentTabKey = 'game';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.getElementById('btn-tr').classList.toggle('active', lang === 'tr');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+      const data = translations[lang];
+      for (const key in data) {
+        const el = document.getElementById(key);
+        if (el) el.innerHTML = data[key];
+      }
+
+      document.getElementById('heroPhoneImg').src = images[lang].game;
+      document.getElementById('galleryImage').src = images[lang][currentTabKey];
+    }
+
+    function changeTab(tabKey, btnElement) {
+      currentTabKey = tabKey;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btnElement.classList.add('active');
+      document.getElementById('galleryImage').src = images[currentLang][tabKey];
+    }
+
+    function toggleFaq(item) {
+      item.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
